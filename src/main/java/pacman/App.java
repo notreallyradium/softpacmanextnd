@@ -6,7 +6,7 @@ import pacman.model.engine.GameEngine;
 import pacman.model.engine.GameEngineImpl;
 import pacman.view.GameWindow;
 
-public class App extends Application {
+public class App extends Application{
 
     public static void main(String[] args) {
         launch(args);
