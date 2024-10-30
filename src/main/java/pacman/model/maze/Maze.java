@@ -62,7 +62,7 @@ public class Maze {
                 this.pacman = renderable;
             } else if (renderableType == RenderableType.GHOST) {
                 this.ghosts.add(renderable);
-            } else if (renderableType == RenderableType.PELLET) {
+            } else if (renderableType == RenderableType.PELLET || renderableType == RenderableType.POWER_PELLET) {
                 this.pellets.add(renderable);
             } else {
                 this.isWall.put(formatCoordinates(x, y), true);

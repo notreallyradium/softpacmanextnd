@@ -58,6 +58,7 @@ public class GameEngineImpl implements GameEngine {
         renderableFactoryRegistry.registerFactory('s', new GhostFactory('s')); // Pinky
         renderableFactoryRegistry.registerFactory('i', new GhostFactory('i')); // Inky
         renderableFactoryRegistry.registerFactory('c', new GhostFactory('c')); // Clyde
+        renderableFactoryRegistry.registerFactory(RenderableType.POWER_PELLET, new PowerPelletFactory());
         return renderableFactoryRegistry;
     }
 

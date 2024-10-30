@@ -13,4 +13,5 @@ public interface RenderableType {
     char PELLET = '7';
     char PACMAN = 'p';
     char GHOST = 'g';
+    char POWER_PELLET = 'z';
 }
