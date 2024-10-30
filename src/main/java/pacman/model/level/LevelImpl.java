@@ -7,11 +7,14 @@ import pacman.model.entity.Renderable;
 import pacman.model.entity.dynamic.DynamicEntity;
 import pacman.model.entity.dynamic.ghost.Ghost;
 import pacman.model.entity.dynamic.ghost.GhostMode;
+import pacman.model.entity.dynamic.ghost.GhostType;
 import pacman.model.entity.dynamic.physics.PhysicsEngine;
+import pacman.model.entity.dynamic.physics.Vector2D;
 import pacman.model.entity.dynamic.player.Controllable;
 import pacman.model.entity.dynamic.player.Pacman;
 import pacman.model.entity.staticentity.StaticEntity;
 import pacman.model.entity.staticentity.collectable.Collectable;
+import pacman.model.entity.staticentity.collectable.PowerPellet;
 import pacman.model.level.observer.LevelStateObserver;
 import pacman.model.maze.Maze;
 
@@ -39,6 +42,10 @@ public class LevelImpl implements Level {
     private GameState gameState;
     private List<Renderable> collectables;
     private GhostMode currentGhostMode;
+    private int frightenedDuration;
+    private double frightenedSpeed;
+    private int ghostsEatenInFrightened;
+    private Vector2D blinkyPosition;
 
     public LevelImpl(JSONObject levelConfiguration,
                      Maze maze) {
@@ -72,15 +79,17 @@ public class LevelImpl implements Level {
                 .collect(Collectors.toList());
         Map<GhostMode, Double> ghostSpeeds = levelConfigurationReader.getGhostSpeeds();
 
+        // Load FRIGHTENED mode duration and speed
+        this.frightenedDuration = levelConfigurationReader.getGhostModeLengths().get(GhostMode.FRIGHTENED);
+        this.frightenedSpeed = ghostSpeeds.get(GhostMode.FRIGHTENED);
+
         for (Ghost ghost : this.ghosts) {
             player.registerObserver(ghost);
             ghost.setSpeeds(ghostSpeeds);
             ghost.setGhostMode(this.currentGhostMode);
         }
         this.modeLengths = levelConfigurationReader.getGhostModeLengths();
-        // Set up collectables
         this.collectables = new ArrayList<>(maze.getPellets());
-
     }
 
     @Override
@@ -122,6 +131,13 @@ public class LevelImpl implements Level {
 
             if (tickCount % Pacman.PACMAN_IMAGE_SWAP_TICK_COUNT == 0) {
                 this.player.switchImage();
+            }
+
+            // Update Blinky's position for Inky's targeting
+            for (Ghost ghost : ghosts) {
+                if (ghost.getType() == GhostType.BLINKY) {
+                    blinkyPosition = ghost.getPosition(); // Update Blinky's position
+                }
             }
 
             // Update the dynamic entities
@@ -171,9 +187,20 @@ public class LevelImpl implements Level {
 
     @Override
     public void collect(Collectable collectable) {
+        if (collectable instanceof PowerPellet) {
+            activateFrightenedMode();
+        }
         this.points += collectable.getPoints();
         notifyObserversWithScoreChange(collectable.getPoints());
         this.collectables.remove(collectable);
+    }
+
+    private void activateFrightenedMode() {
+        this.ghostsEatenInFrightened = 0;
+        this.currentGhostMode = GhostMode.FRIGHTENED;
+        for (Ghost ghost : this.ghosts) {
+            ghost.enterFrightenedMode(frightenedDuration * 1000L);
+        }
     }
 
     @Override

@@ -19,4 +19,18 @@ public enum Direction {
             case RIGHT -> LEFT;
         };
     }
+
+    /**
+     * Converts the direction to a corresponding Vector2D.
+     *
+     * @return Vector2D representing the direction
+     */
+    public Vector2D toVector() {
+        return switch (this) {
+            case UP -> new Vector2D(0, -1);
+            case DOWN -> new Vector2D(0, 1);
+            case LEFT -> new Vector2D(-1, 0);
+            case RIGHT -> new Vector2D(1, 0);
+        };
+    }
 }

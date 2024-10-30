@@ -50,6 +50,14 @@ public class Vector2D {
         return this.y > y;
     }
 
+    public Vector2D scale(double factor) {
+        return new Vector2D(this.x * factor, this.y * factor);
+    }
+
+    public Vector2D subtract(Vector2D v) {
+        return new Vector2D(this.x - v.getX(), this.y - v.getY());
+    }
+
     @Override
     public String toString() {
         return "(" + this.x + ", " + this.y + ")";

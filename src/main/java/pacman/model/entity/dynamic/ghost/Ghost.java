@@ -22,4 +22,13 @@ public interface Ghost extends DynamicEntity, PlayerPositionObserver {
      * @param ghostMode mode of the Ghost
      */
     void setGhostMode(GhostMode ghostMode);
+
+    /**
+     * Puts the ghost in FRIGHTENED mode for a specified duration.
+     *
+     * @param duration Duration in milliseconds for the FRIGHTENED mode
+     */
+    void enterFrightenedMode(long duration);
+
+    GhostType getType();
 }

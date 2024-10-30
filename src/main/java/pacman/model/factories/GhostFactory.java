@@ -69,6 +69,7 @@ public class GhostFactory implements RenderableFactory {
                     .build();
 
             return new GhostImpl(
+                    ghostType,
                     ghostImage,
                     boundingBox,
                     kinematicState,
